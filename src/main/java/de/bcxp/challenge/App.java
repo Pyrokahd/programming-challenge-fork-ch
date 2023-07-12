@@ -17,67 +17,34 @@ public final class App {
      */
     public static void main(String... args) {
 
-        String filePathWeather = "src\\main\\resources\\de\\bcxp\\challenge\\weather.csv";
+        String filePathWeather = "src/main/resources/de/bcxp/challenge/weather.csv";
+        String filePathCountries = "src/main/resources/de/bcxp/challenge/countries.csv";
 
-        Scanner csv_reader = null;
-        // Create csv_reader as Scanner
-        try {
-            csv_reader = new Scanner(new File(filePathWeather));
-        } catch (Exception e) {
-            System.out.printf(e.toString());
-        }
+        // TASK1
 
-        // read the reader content
-        // TODO error handling, exceptions ?
-        System.out.print("\n");
-        // get first line as columnHeaders
-        // Todo make into function and add deliminator parameter
-        // Todo check expected format of same number of columns and same number of values in every row
-        String[] columnHeaderArray = csv_reader.nextLine().split(",");
+        CSVDataReader myCSVDataReader = new CSVDataReader();
+        myCSVDataReader.create_output_data(filePathWeather);
+        DataHandlerCSV myDataHandlerCSVWeather = new DataHandlerCSV(myCSVDataReader.getColumnArray(), myCSVDataReader.getDataArray2D());
 
-        ArrayList<String[]> dataLists = new ArrayList<>();
-        while (csv_reader.hasNext()){
-            dataLists.add(csv_reader.nextLine().split(","));
-        }
-        // Convert ArrayList into 2D Array (of appropriate size), the inner part is already of Type Array
-        String[][] dataArrays = dataLists.toArray(String[][]::new);
+        String dayWithSmallestTempSpread = null;
 
-        System.out.print(columnHeaderArray);
-        DataHandlerCSV myDataHandlerCSV = new DataHandlerCSV(columnHeaderArray, dataArrays);
-        // Get they Hashmap with the values
-        HashMap<String, ArrayList<Float>> columnsMap = myDataHandlerCSV.getColumnsMap();
+        dayWithSmallestTempSpread = myDataHandlerCSVWeather.getLowestDeltaDay("Day", "MnT", "MxT"); // Your day analysis function call …
 
-
-        for (String key : columnsMap.keySet()){
-            String value = columnsMap.get(key).toString();
-            System.out.println(key + " " + value);
-        }
-
-
-        int rowCount = columnsMap.get("Day").size();
-        float[] tempDifference = new float[rowCount];
-        for (int i = 0; i < rowCount; i++) {
-            float diff = columnsMap.get("MxT").get(i) - columnsMap.get("MnT").get(i);
-            tempDifference[i] = diff;
-        }
-        // Todo handle null array?
-        int index = 0;
-        float min = tempDifference[index];
-        for (int i = 0; i < tempDifference.length; i++){
-            if (tempDifference[i] < min){
-                index = i;
-            }
-        }
-
-        Float returnDay = columnsMap.get("Day").get(index);
-        System.out.println(returnDay);
-
-
-        System.out.print("\n");
-        String dayWithSmallestTempSpread = returnDay.toString();     // Your day analysis function call …
         System.out.printf("Day with smallest temperature spread: %s%n", dayWithSmallestTempSpread);
 
-        String countryWithHighestPopulationDensity = "Some country"; // Your population density analysis function call …
+        // TASK2
+
+        myCSVDataReader.setDelimiter(";");
+        myCSVDataReader.create_output_data(filePathCountries);
+
+        DataHandlerCSV myDataHandlerCSVCountries = new DataHandlerCSV(myCSVDataReader.getColumnArray(), myCSVDataReader.getDataArray2D());
+
+        String countryWithHighestPopulationDensity = null;
+
+        countryWithHighestPopulationDensity = myDataHandlerCSVCountries.getHighestCountryPopDensity("Name", "Area (km²)", "Population"); // Your population density analysis function call …
+
+
         System.out.printf("Country with highest population density: %s%n", countryWithHighestPopulationDensity);
+
     }
 }
