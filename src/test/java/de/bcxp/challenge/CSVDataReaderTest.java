@@ -31,10 +31,26 @@ public class CSVDataReaderTest {
     }
 
     @Test
+    void testCreateCSVDataFromReadingFileMissingValueSuccess(){
+        CSVDataReader myReader = new CSVDataReader();
+        String path = "src/main/resources/de/bcxp/challenge/unitTest3.csv";
+        myReader.setDelimiter(";");
+        try{
+            myReader.createOutputData(path);
+        } catch(Exception e) {
+        }
+        String[] expectedColumns = {"col1", "col2", "col3"};
+        //test empty value at every position
+        String[][] expectedRows = {{"1","1000.00",""},{"","0.2","b"},{"3","","c"}};
+        assertArrayEquals(expectedColumns, myReader.getColumnArray());
+        assertArrayEquals(expectedRows, myReader.getDataArray2D());
+    }
+
+    @Test
     void testCreateCSVDataWrongInputFailure(){
         CSVDataReader myReader = new CSVDataReader();
         String path = "src/main/resources/de/bcxp/challenge/WrongPath.csv";
-        Exception exception = assertThrows(java.io.FileNotFoundException.class, () -> {
+        Exception exception = assertThrows(Exception.class, () -> {
             myReader.createOutputData(path);
         });
         String expectedMessage = "Could not read the data, wrong file path or type";

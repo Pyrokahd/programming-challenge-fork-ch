@@ -1,9 +1,7 @@
 package de.bcxp.challenge;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class CSVDataReader implements DataReader {
@@ -44,18 +42,17 @@ public class CSVDataReader implements DataReader {
         try {
             csv_reader = new Scanner(new File(filepath));
 
-            // Todo check expected format of same number of columns and same number of values in every row
-            // if not, the output is unexpected due to values beeing at the wrong column position
-            // or calculations in the handler later on might lead to errors due to missing values or empty values
+            // TODO handle missing values here or in another function, by filling the in? Currently they are empty strings
 
             // Read column names
-            this.columnArray = csv_reader.nextLine().split(this.delimiter);
+            // split is overloaded to leave trailing empty strings in, for cases where the last value of a row is empty
+            this.columnArray = csv_reader.nextLine().split(this.delimiter, -1);
             // Read Values
             ArrayList<String[]> dataLists = new ArrayList<>();
             while (csv_reader.hasNext()){
                 // clean special cases where we have german numbers 1.000,00
-                // maybe only call if delimiter is ";" ?
-                String[] rowArray = csv_reader.nextLine().split(this.delimiter);
+                // maybe only call if delimiter is ";" ? Or a way to specify the csv language
+                String[] rowArray = csv_reader.nextLine().split(this.delimiter, -1);
                 rowArray = cleanFloatStrings(rowArray);
                 dataLists.add(rowArray);
             }
@@ -63,8 +60,6 @@ public class CSVDataReader implements DataReader {
             this.dataArray2D = dataLists.toArray(String[][]::new);
 
         } catch (Exception e) {
-            e.printStackTrace(System.out);
-            System.out.printf(e.toString());
             throw new Exception("Could not read the data, wrong file path or type");
         }
 
