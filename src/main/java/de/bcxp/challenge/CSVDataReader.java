@@ -1,6 +1,7 @@
 package de.bcxp.challenge;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -28,7 +29,6 @@ public class CSVDataReader implements DataReader {
     }
 
     CSVDataReader(){
-
     }
 
     /***
@@ -38,7 +38,7 @@ public class CSVDataReader implements DataReader {
      * @param filepath Path to the CSV file
      */
     @Override
-    public void create_output_data(String filepath)  {
+    public void createOutputData(String filepath) throws Exception {
         Scanner csv_reader = null;
         // Create csv_reader as Scanner
         try {
@@ -65,6 +65,7 @@ public class CSVDataReader implements DataReader {
         } catch (Exception e) {
             e.printStackTrace(System.out);
             System.out.printf(e.toString());
+            throw new Exception("Could not read the data, wrong file path or type");
         }
 
     }
@@ -72,6 +73,7 @@ public class CSVDataReader implements DataReader {
     /**
      * For strings (that represent a decimal) that contain a dot and a comma like the german format "1.000.000,00"
      * remove the dots and replace comma with a dot to convert to english decimal.
+     * Does not consider cases like "50,00" in which only a comma is present within a number!
      * @param splitList
      * @return
      */

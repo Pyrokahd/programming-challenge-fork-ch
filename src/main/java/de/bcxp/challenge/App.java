@@ -1,7 +1,4 @@
 package de.bcxp.challenge;
-import java.lang.reflect.Array;
-import java.util.*;
-import java.io.*;
 
 
 /**
@@ -23,7 +20,13 @@ public final class App {
         // TASK1
 
         CSVDataReader myCSVDataReader = new CSVDataReader();
-        myCSVDataReader.create_output_data(filePathWeather);
+        try{
+            myCSVDataReader.createOutputData(filePathWeather);
+        } catch (Exception e){
+            e.printStackTrace(System.out);
+            System.out.printf(e.toString());
+        }
+
         DataHandlerCSV myDataHandlerCSVWeather = new DataHandlerCSV(myCSVDataReader.getColumnArray(), myCSVDataReader.getDataArray2D());
 
         String dayWithSmallestTempSpread = null;
@@ -35,7 +38,13 @@ public final class App {
         // TASK2
 
         myCSVDataReader.setDelimiter(";");
-        myCSVDataReader.create_output_data(filePathCountries);
+        try {
+            myCSVDataReader.createOutputData(filePathCountries);
+        }catch (Exception e){
+            e.printStackTrace(System.out);
+            System.out.printf(e.toString());
+        }
+
 
         DataHandlerCSV myDataHandlerCSVCountries = new DataHandlerCSV(myCSVDataReader.getColumnArray(), myCSVDataReader.getDataArray2D());
 

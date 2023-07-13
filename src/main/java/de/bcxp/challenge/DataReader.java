@@ -2,5 +2,5 @@ package de.bcxp.challenge;
 
 public interface DataReader {
 
-    void create_output_data(String filepath);
+    void createOutputData(String filepath) throws Exception;
 }
