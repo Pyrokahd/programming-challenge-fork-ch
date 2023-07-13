@@ -45,11 +45,11 @@ public class CSVDataReader implements DataReader {
             csv_reader = new Scanner(new File(filepath));
 
             // Todo check expected format of same number of columns and same number of values in every row
+            // if not, the output is unexpected due to values beeing at the wrong column position
+            // or calculations in the handler later on might lead to errors due to missing values or empty values
+
             // Read column names
             this.columnArray = csv_reader.nextLine().split(this.delimiter);
-
-            System.out.println("\n");
-            System.out.println(Arrays.toString(columnArray));
             // Read Values
             ArrayList<String[]> dataLists = new ArrayList<>();
             while (csv_reader.hasNext()){

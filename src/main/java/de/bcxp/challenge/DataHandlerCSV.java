@@ -37,11 +37,7 @@ public class DataHandlerCSV {
                 // check if the key exists and if it has a value other than null
                 // if not, create a new empty ArrayList as value to that key
                 // else take the value of that key (Here an arraylist) and add a value to it
-                try{
-                    this.columnsMap.computeIfAbsent(key, v -> new ArrayList<>()).add(value);
-                } catch(ClassCastException e){
-                    System.out.println("Cannot convert to string: "+e);
-                }
+                this.columnsMap.computeIfAbsent(key, v -> new ArrayList<>()).add(value);
             }
         }
     }
@@ -58,6 +54,7 @@ public class DataHandlerCSV {
         // if column name does not exist
         if (!(columnsMap.containsKey(day_col) && columnsMap.containsKey(deltamin_col) &&
                 columnsMap.containsKey(deltamax_col))){
+            System.out.println("WRONG COLUMN NAME CASE");
             throw new Exception("Column name not found!");
         }
 
@@ -65,7 +62,14 @@ public class DataHandlerCSV {
         int rowCount = columnsMap.get(day_col).size();
         float[] tempDifference = new float[rowCount];
         for (int i = 0; i < rowCount; i++) {
-            float diff = Float.valueOf(columnsMap.get(deltamax_col).get(i)) - Float.valueOf(columnsMap.get(deltamin_col).get(i));
+            float diff = -1;
+            try{
+                diff = Float.valueOf(columnsMap.get(deltamax_col).get(i)) - Float.valueOf(columnsMap.get(deltamin_col).get(i));
+            } catch(Exception e) {
+                throw new java.lang.NumberFormatException("Can not convert one of those strings to float " +
+                        "str1: "+ columnsMap.get(deltamax_col).get(i) + "|str2: " + columnsMap.get(deltamin_col).get(i));
+            }
+
             tempDifference[i] = diff;
         }
         // Get day with the lowest delta
@@ -80,7 +84,17 @@ public class DataHandlerCSV {
         return returnDay;
     }
 
-
+    /**
+     * Takes the column names for countries, area and population
+     * calculates based on the values of those columns,
+     * the population density per country and returns the country with
+     * the highest density.
+     * @param country_col
+     * @param area_col
+     * @param pop_col
+     * @return
+     * @throws Exception
+     */
     public String getHighestCountryPopDensity(String country_col, String area_col, String pop_col) throws Exception {
         // if column name does not exist
         if (!(columnsMap.containsKey(country_col) && columnsMap.containsKey(area_col) &&
@@ -93,7 +107,10 @@ public class DataHandlerCSV {
         float[] densityArray = new float[rowCount];
         for (int i = 0; i < rowCount; i++) {
             float a = Float.valueOf(columnsMap.get(pop_col).get(i));
-            var b = Float.valueOf(columnsMap.get(area_col).get(i));
+            float b = Float.valueOf(columnsMap.get(area_col).get(i));
+            if ((a <= 0) || (b <= 0)){
+                throw new ArithmeticException("one of the values is less or equal than zero! Missing Values?");
+            }
             float density = a / b;
             densityArray[i] = density;
         }
