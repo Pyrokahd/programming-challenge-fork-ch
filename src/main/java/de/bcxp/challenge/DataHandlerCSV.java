@@ -54,8 +54,12 @@ public class DataHandlerCSV {
      * @param deltamax_col
      * @return
      */
-    public String getLowestDeltaDay(String day_col, String deltamin_col, String deltamax_col) {
-        // TODO check if column name exists
+    public String getLowestDeltaDay(String day_col, String deltamin_col, String deltamax_col) throws Exception {
+        // if column name does not exist
+        if (!(columnsMap.containsKey(day_col) && columnsMap.containsKey(deltamin_col) &&
+                columnsMap.containsKey(deltamax_col))){
+            throw new Exception("Column name not found!");
+        }
 
         // Calculate the temperature delta
         int rowCount = columnsMap.get(day_col).size();
@@ -77,8 +81,12 @@ public class DataHandlerCSV {
     }
 
 
-    public String getHighestCountryPopDensity(String country_col, String area_col, String pop_col) {
-        // TODO check if column name exists
+    public String getHighestCountryPopDensity(String country_col, String area_col, String pop_col) throws Exception {
+        // if column name does not exist
+        if (!(columnsMap.containsKey(country_col) && columnsMap.containsKey(area_col) &&
+                columnsMap.containsKey(pop_col))){
+            throw new Exception("Column name not found!");
+        }
 
         // population / area
         int rowCount = columnsMap.get(country_col).size();

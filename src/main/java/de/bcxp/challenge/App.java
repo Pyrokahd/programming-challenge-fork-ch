@@ -28,11 +28,13 @@ public final class App {
         }
 
         DataHandlerCSV myDataHandlerCSVWeather = new DataHandlerCSV(myCSVDataReader.getColumnArray(), myCSVDataReader.getDataArray2D());
-
         String dayWithSmallestTempSpread = null;
-
-        dayWithSmallestTempSpread = myDataHandlerCSVWeather.getLowestDeltaDay("Day", "MnT", "MxT"); // Your day analysis function call …
-
+        try {
+            dayWithSmallestTempSpread = myDataHandlerCSVWeather.getLowestDeltaDay("Day", "MnT", "MxT"); // Your day analysis function call …
+        } catch (Exception e){
+            e.printStackTrace(System.out);
+            System.out.printf(e.toString());
+        }
         System.out.printf("Day with smallest temperature spread: %s%n", dayWithSmallestTempSpread);
 
         // TASK2
@@ -40,19 +42,19 @@ public final class App {
         myCSVDataReader.setDelimiter(";");
         try {
             myCSVDataReader.createOutputData(filePathCountries);
-        }catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace(System.out);
             System.out.printf(e.toString());
         }
 
-
         DataHandlerCSV myDataHandlerCSVCountries = new DataHandlerCSV(myCSVDataReader.getColumnArray(), myCSVDataReader.getDataArray2D());
-
         String countryWithHighestPopulationDensity = null;
-
-        countryWithHighestPopulationDensity = myDataHandlerCSVCountries.getHighestCountryPopDensity("Name", "Area (km²)", "Population"); // Your population density analysis function call …
-
-
+        try{
+            countryWithHighestPopulationDensity = myDataHandlerCSVCountries.getHighestCountryPopDensity("Name", "Area (km²)", "Population"); // Your population density analysis function call …
+        } catch (Exception e){
+            e.printStackTrace(System.out);
+            System.out.printf(e.toString());
+        }
         System.out.printf("Country with highest population density: %s%n", countryWithHighestPopulationDensity);
 
     }
